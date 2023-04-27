@@ -1,3 +1,4 @@
+import 'package:com/features/one_chat/screens/one_chat.dart';
 import 'package:flutter/material.dart';
 
 class AllChats extends StatefulWidget {
@@ -23,38 +24,48 @@ class _AllChatsState extends State<AllChats> {
                 'assets/images/download.png',
                 height: 7 + 7 + 7 + 7 + 7 + 7 + 7 + 7,
               ),
-              Container(
-                margin: EdgeInsets.all(7),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(7),
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      width: 7 - 6,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OneChatScreen(),
                     ),
-                    borderRadius: BorderRadius.circular(7 + 7),
-                  ),
-                  leading: const CircleAvatar(
-                    radius: 7 + 7 + 7 + 7 + 7,
-                    backgroundImage: AssetImage(
-                      'assets/images/daidris7.jpg',
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.all(7),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(7),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 7 - 6,
+                      ),
+                      borderRadius: BorderRadius.circular(7 + 7),
                     ),
-                  ),
-                  title: const Text(
-                    'DAIDRIS7',
-                  ),
-                  subtitle: const Text(
-                    'DAIDRIS7',
-                  ),
-                  trailing: Column(
-                    children: [
-                      const Text(
-                        'DAIDRIS7',
+                    leading: const CircleAvatar(
+                      radius: 7 + 7 + 7 + 7 + 7,
+                      backgroundImage: AssetImage(
+                        'assets/images/daidris7.jpg',
                       ),
-                      const SizedBox(height: 7 + 7),
-                      const Text(
-                        'DAIDRIS7 ',
-                      ),
-                    ],
+                    ),
+                    title: const Text(
+                      'DAIDRIS7',
+                    ),
+                    subtitle: const Text(
+                      'DAIDRIS7',
+                    ),
+                    trailing: Column(
+                      children: [
+                        const Text(
+                          'DAIDRIS7',
+                        ),
+                        const SizedBox(height: 7 + 7),
+                        const Text(
+                          'DAIDRIS7 ',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -77,8 +88,8 @@ class _AllChatsState extends State<AllChats> {
           type: BottomNavigationBarType.fixed,
           items: [
             const BottomNavigationBarItem(
-              label: 'DAIDRIS7',
-              icon: Icon(Icons.favorite),
+              label: 'Messeges',
+              icon: Icon(Icons.forum_outlined),
             ),
             const BottomNavigationBarItem(
               label: 'DAIDRIS7',
