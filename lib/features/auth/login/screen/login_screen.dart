@@ -8,7 +8,6 @@ class LogInPage extends StatelessWidget {
   final emailAddress = TextEditingController();
   final passwod = TextEditingController();
 
-  BuildContext get context => null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

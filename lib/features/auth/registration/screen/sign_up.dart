@@ -124,7 +124,7 @@ class SignUpPage extends StatelessWidget {
       if (kDebugMode) {
         print(e);
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('@e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('@e reg')));
     }
   }
 }
