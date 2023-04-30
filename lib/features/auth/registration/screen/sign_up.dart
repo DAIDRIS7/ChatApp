@@ -1,7 +1,12 @@
 import 'package:com/features/auth/login/screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
+  final emailAddress = TextEditingController();
+  final password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,14 +72,7 @@ class SignUpPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.amber,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LogInPage(),
-                    ),
-                  );
-                },
+                onPressed: _createAccount(context),
                 child: Text(
                   'Sign Up',
                 ),
@@ -99,5 +97,34 @@ class SignUpPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _createAccount(context) async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailAddress.text,
+        password: password.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        if (kDebugMode) {
+          print('The password provided is too weak.');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Password provided is too weak')));
+      } else if (e.code == 'email-already-in-use') {
+        if (kDebugMode) {
+          print('The account already exists for that email.');
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('The email already exists ')));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('@e')));
+    }
   }
 }

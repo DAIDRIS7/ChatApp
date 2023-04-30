@@ -1,8 +1,14 @@
 import 'package:com/features/all_chats/screens/all_chats.dart';
 import 'package:com/features/auth/registration/screen/sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class LogInPage extends StatelessWidget {
+  final emailAddress = TextEditingController();
+  final passwod = TextEditingController();
+
+  BuildContext get context => null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,12 +31,14 @@ class LogInPage extends StatelessWidget {
               'DAIDRIS7 ',
             ),
             TextFormField(
+              controller: emailAddress,
               decoration: InputDecoration(hintText: 'Enter your Email'),
             ),
             SizedBox(
               height: 7 + 7,
             ),
             TextFormField(
+              controller: passwod,
               decoration: InputDecoration(hintText: 'Enter your Password'),
             ),
             SizedBox(
@@ -53,12 +61,7 @@ class LogInPage extends StatelessWidget {
                 primary: Colors.black,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllChats(),
-                  ),
-                );
+                _logIn(context);
               },
               child: Text(
                 'Sign in',
@@ -87,5 +90,38 @@ class LogInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _logIn(BuildContext context) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailAddress.text, password: passwod.text);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AllChats(),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        if (kDebugMode) {
+          print('No user found for that email.');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Email is not exist'),
+          ),
+        );
+      } else if (e.code == 'wrong-password') {
+        if (kDebugMode) {
+          print('Wrong password provided for that user.');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('wrong-password'),
+          ),
+        );
+      }
+    }
   }
 }
