@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class SignUpPage extends StatelessWidget {
   final emailAddress = TextEditingController();
   final password = TextEditingController();
+  final name = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,7 @@ class SignUpPage extends StatelessWidget {
                 height: 7 + 7,
               ),
               TextFormField(
+                controller: name,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -124,7 +126,8 @@ class SignUpPage extends StatelessWidget {
       if (kDebugMode) {
         print(e);
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('@e reg')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('@e reg')));
     }
   }
 }

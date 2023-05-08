@@ -1,31 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:com/features/one_chat/model/one_chat_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 class OneChatScreen extends StatefulWidget {
+  const OneChatScreen({super.key});
+
   @override
   State<OneChatScreen> createState() => _OneChatScreenState();
 }
 
 class _OneChatScreenState extends State<OneChatScreen> {
+  var oneMessage;
   final myNewMessage = TextEditingController();
-  List<Messages> messages = [
-    Messages(
-        message: 'Hello DAIDRIS7', dateTime: DateTime.now(), isSentByMe: false),
-    Messages(message: 'Hello', dateTime: DateTime.now(), isSentByMe: true),
-    Messages(
-        message: 'How are you?', dateTime: DateTime.now(), isSentByMe: false),
-    Messages(
-        message: 'Iam Fine and you ',
-        dateTime: DateTime.now(),
-        isSentByMe: true),
-    Messages(message: 'Good ', dateTime: DateTime.now(), isSentByMe: false),
-    Messages(
-        message: 'Okey Always', dateTime: DateTime.now(), isSentByMe: true),
-    Messages(message: 'With you', dateTime: DateTime.now(), isSentByMe: false),
-    Messages(message: 'Thanks 😊', dateTime: DateTime.now(), isSentByMe: true),
-  ];
-
+  final _fireStore = FirebaseFirestore.instance;
+  final user = FirebaseAuth.instance.currentUser!.email;
+  List<Widget> allMessages = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,32 +25,38 @@ class _OneChatScreenState extends State<OneChatScreen> {
           children: [
             Expanded(
               child: Container(
-                margin: EdgeInsets.all(7),
-                child: GroupedListView<Messages, DateTime>(
-                  elements: messages,
-                  groupBy: (message) => DateTime(220),
-                  floatingHeader: true,
-                  groupHeaderBuilder: (message) => SizedBox(),
-                  itemBuilder: (context, message) {
-                    return Align(
-                      alignment: message.isSentByMe == false
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                      child: Card(
-                        elevation: 0,
-                        child: Text(
-                          message.message,
-                          style: TextStyle(
-                            color: message.isSentByMe == true
-                                ? Colors.blue
-                                : Colors.black,
-                          ),
-                        ),
+                  //  margin: EdgeInsets.all(7),
+                  child: StreamBuilder<QuerySnapshot>(
+                stream: _fireStore.collection('allmessages').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        '${snapshot.error}',
                       ),
                     );
-                  },
-                ),
-              ),
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    final data = snapshot.data!.docs;
+                    for (var myData in data) {
+                      final message = myData.get('onemessage');
+                      final sender = myData.get('owner');
+                      bool isSendByMe = sender == user;
+
+                      allMessages.add(MessageStyle(
+                          message: message, isSendByMe: isSendByMe));
+                    }
+                    return ListView(
+                      children: allMessages,
+                    );
+                  }
+
+                  return SizedBox();
+                },
+              )),
             ),
             _newMessage(),
           ],
@@ -73,8 +70,10 @@ class _OneChatScreenState extends State<OneChatScreen> {
       children: [
         Expanded(
           child: TextField(
+            onChanged: (value) {
+              oneMessage = value;
+            },
             controller: myNewMessage,
-            onSubmitted: (value) {},
             decoration: InputDecoration(
                 hintText: 'write here',
                 border: OutlineInputBorder(
@@ -86,21 +85,52 @@ class _OneChatScreenState extends State<OneChatScreen> {
           width: 7,
         ),
         FloatingActionButton(
-          onPressed: () {
-            final newMessage = Messages(
-                dateTime: DateTime.now(),
-                isSentByMe: true,
-                message: myNewMessage.text);
-            setState(() {
-              messages.add(newMessage);
-              myNewMessage.clear();
-            });
-          }, //myNewMessage(),
+          onPressed: () async {
+            myNewMessage.clear();
+            await _fireStore
+                .collection('allmessages')
+                .add({'onemessage': oneMessage, 'owner': user});
+          },
           child: Icon(
             Icons.send,
           ),
         ),
       ],
+    );
+  }
+}
+
+class MessageStyle extends StatelessWidget {
+  var message;
+  bool isSendByMe;
+  MessageStyle({super.key, this.message, required this.isSendByMe});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Align(
+      alignment: isSendByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSendByMe ? Colors.amberAccent : Colors.grey,
+          borderRadius: isSendByMe
+              ? BorderRadius.only(
+                  bottomLeft: Radius.circular(7),
+                  bottomRight: Radius.circular(7),
+                  topLeft: Radius.circular(7),
+                )
+              : BorderRadius.only(
+                  bottomLeft: Radius.circular(7),
+                  bottomRight: Radius.circular(7),
+                  topRight: Radius.circular(7),
+                ),
+        ),
+        padding: EdgeInsets.all(7),
+        margin: EdgeInsets.all(7 + 7),
+        child: Text(
+          '$message',
+        ),
+      ),
     );
   }
 }

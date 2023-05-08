@@ -1,6 +1,10 @@
+import 'package:com/features/home/screens/home.dart';
 import 'package:com/features/one_chat/screens/one_chat.dart';
+import 'package:com/features/profile/screen/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+//import 'package:com/features/profile/screen/profile_screen.dart';
 class AllChats extends StatefulWidget {
   @override
   State<AllChats> createState() => _AllChatsState();
@@ -8,6 +12,7 @@ class AllChats extends StatefulWidget {
 
 class _AllChatsState extends State<AllChats> {
   int activeIndex = 0;
+
   _showModalBottomSheet() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -56,11 +61,12 @@ class _AllChatsState extends State<AllChats> {
                       'DAIDRIS7',
                     ),
                     trailing: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
                           'DAIDRIS7',
                         ),
-                        const SizedBox(height: 7 + 7),
+                        const SizedBox(height: 7),
                         const Text(
                           'DAIDRIS7 ',
                         ),
@@ -68,6 +74,39 @@ class _AllChatsState extends State<AllChats> {
                     ),
                   ),
                 ),
+              ),
+            ],
+          );
+        });
+  }
+
+  _showProfileDetails() {
+    showModalBottomSheet(
+        //   isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(42),
+          ),
+        ),
+        context: context,
+        builder: (context) {
+          return ListView(
+            children: [
+              Center(
+                child: Container(
+                    margin: EdgeInsets.all(7),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ),
+                        );
+                      },
+                      child: Text('Sign Out'),
+                    )),
               ),
             ],
           );
@@ -84,6 +123,7 @@ class _AllChatsState extends State<AllChats> {
               activeIndex = index;
             });
             if (index == 0) _showModalBottomSheet();
+            if (index == 4) _showProfileDetails();
           },
           type: BottomNavigationBarType.fixed,
           items: [
@@ -104,9 +144,9 @@ class _AllChatsState extends State<AllChats> {
               icon: Icon(Icons.favorite),
             ),
             const BottomNavigationBarItem(
-              label: 'DAIDRIS7',
+              label: 'Profile',
               tooltip: 'GOAT',
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.person),
             ),
           ]),
       backgroundColor: Colors.black,

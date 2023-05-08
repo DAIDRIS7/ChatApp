@@ -1,7 +1,9 @@
 import 'package:com/features/all_chats/screens/all_chats.dart';
+import 'package:com/features/auth/login/screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Homepage extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,12 +63,25 @@ class Homepage extends StatelessWidget {
                 backgroundColor: Colors.white,
               ),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllChats(),
-                  ),
-                );
+                FirebaseAuth.instance.idTokenChanges().listen((User? user) {
+                  if (user == null) {
+                    print('User is currently signed out!');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LogInPage(),
+                      ),
+                    );
+                  } else {
+                    print('User is signed in!');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllChats(),
+                      ),
+                    );
+                  }
+                });
               },
               child: Text(
                 'Get Started',

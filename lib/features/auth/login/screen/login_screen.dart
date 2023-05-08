@@ -57,7 +57,7 @@ class LogInPage extends StatelessWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black,
+                primary: Colors.white,
               ),
               onPressed: () {
                 _logIn(context);
