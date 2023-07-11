@@ -1,5 +1,5 @@
-import 'package:com/features/all_chats/screens/all_chats.dart';
 import 'package:com/features/auth/login/screen/login_screen.dart';
+import 'package:com/features/main/view/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -77,7 +77,7 @@ class HomePage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AllChats(),
+                        builder: (context) => MainPage(),
                       ),
                     );
                   }

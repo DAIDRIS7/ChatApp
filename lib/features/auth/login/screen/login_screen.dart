@@ -1,5 +1,5 @@
-import 'package:com/features/all_chats/screens/all_chats.dart';
 import 'package:com/features/auth/registration/screen/sign_up.dart';
+import 'package:com/features/main/view/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -95,10 +95,10 @@ class LogInPage extends StatelessWidget {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailAddress.text, password: passwod.text);
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => AllChats(),
+          builder: (context) => MainPage(),
         ),
       );
     } on FirebaseAuthException catch (e) {

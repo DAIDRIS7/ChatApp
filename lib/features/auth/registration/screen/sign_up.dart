@@ -29,6 +29,10 @@ class SignUpPage extends StatelessWidget {
                 height: 7 + 7 + 7 + 7,
               ),
               TextFormField(
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                controller: emailAddress,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(
@@ -43,6 +47,9 @@ class SignUpPage extends StatelessWidget {
                 height: 7 + 7,
               ),
               TextFormField(
+                style: TextStyle(
+                  color: Colors.white,
+                ),
                 controller: name,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -57,6 +64,10 @@ class SignUpPage extends StatelessWidget {
                 height: 7 + 7,
               ),
               TextFormField(
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+                controller: password,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(
@@ -74,7 +85,9 @@ class SignUpPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.amber,
                 ),
-                onPressed: _createAccount(context),
+                onPressed: () {
+                  _createAccount(context);
+                },
                 child: Text(
                   'Sign Up',
                 ),
